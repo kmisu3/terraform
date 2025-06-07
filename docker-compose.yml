@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  terraform:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    volumes:
+      - .:/work
+      - ./.aws:/root/.aws
+    environment:
+      - AWS_PROFILE=${AWS_PROFILE:-${ENV:-default}}
+      - ENV=${ENV:-dev}
+    working_dir: /work
+    entrypoint: /bin/bash 

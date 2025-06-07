@@ -1,0 +1,33 @@
+# Terraform関連ファイル
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+.terraform.lock.hcl
+
+# AWS認証情報
+.aws/credentials
+
+# ローカル環境ファイル
+.env
+.envrc
+
+# OS関連ファイル
+.DS_Store
+Thumbs.db
+
+# エディタ関連ファイル
+.idea/
+.vscode/
+*.swp
+*.swo
+*~ 
