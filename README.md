@@ -124,18 +124,11 @@ cd bootstrap
 # Terraformの初期化
 make tf-init ENV=dev
 
-# もしくは直接コマンドを実行
-terraform init
-
 # 実行計画の確認
 make tf-plan ENV=dev
-# または
-terraform plan
 
 # インフラストラクチャのデプロイ
 make tf-apply ENV=dev
-# または
-terraform apply
 ```
 
 これにより、各環境（dev、stg、prod）のTerraform状態を保存するためのS3バケットが作成されます。
