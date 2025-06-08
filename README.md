@@ -212,3 +212,18 @@ make tf-plan ENV=dev
 # 開発環境のリソース適用
 make tf-apply ENV=dev
 ```
+
+### 4. リソースの削除
+
+環境内のリソースを削除する必要がある場合は、以下のコマンドを使用します。
+
+```bash
+# 開発環境のリソースを削除
+make tf-destroy ENV=dev
+
+# ステージング環境のリソースを削除
+make tf-destroy ENV=stg
+
+# 本番環境のリソースを削除
+make tf-destroy ENV=prod
+```
