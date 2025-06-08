@@ -11,7 +11,7 @@ fi
 ARGS=$@
 
 # 環境ディレクトリに移動
-cd /work/terraform/$ENV
+cd /work/environments/$ENV
 
 # Terraformコマンドを実行
 terraform $ARGS 
