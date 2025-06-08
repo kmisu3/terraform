@@ -2,7 +2,7 @@
 
 このリポジトリは、Docker環境でTerraformを実行するための設定を提供します。PC環境に直接Terraformをインストールする必要がなく、複数の環境（dev、stg、prod）の管理が容易になります。
 
-## セットアップ
+## 環境セットアップ
 
 1. `.aws/credentials` ファイルにAWSの認証情報を設定します
 2. Dockerイメージをビルドします
@@ -111,7 +111,7 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
     └── waf/               # WAFモジュール
 ```
 
-## セットアップ手順
+## Terraform初期セットアップ
 
 ### 1. ブートストラップの実行
 
