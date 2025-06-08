@@ -115,6 +115,8 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
 
 ### 1. ブートストラップの実行
 
+**重要**: ブートストラップを実行する前に、`bootstrap/[環境]/main.tf`および`environments/[環境]/backend.tf`ファイル内のバケット名に含まれるAWSアカウントID（例: 123456000000）とプロジェクトプレフィックス（例: my-project）を、ご自身の環境に合わせて変更してください。これらの値はユニークである必要があります。
+
 まず、Terraformの状態管理に必要なインフラ（S3バケット）を作成します。bootstrapディレクトリには、各環境（開発、ステージング、本番）のTerraform状態を保存するためのS3バケットを作成するための設定が含まれています。
 
 各環境は独立したディレクトリに分かれており、必要な環境のみデプロイすることができます。
@@ -145,10 +147,24 @@ terraform apply
 
 #### 変数の設定
 
-各環境ディレクトリの`variables.tf`ファイルで以下の変数を設定することで、S3バケットの命名などをカスタマイズできます：
+**必須**: 各環境ディレクトリの`variables.tf`ファイルで以下の変数を設定してください：
 
 - `project_prefix`: プロジェクト固有のプレフィックス（S3バケット名の一部として使用）
-- `region`: AWSリージョン
+  - デフォルト値の `my-project` を必ずご自身のプロジェクト名に変更してください
+  - 例: `"your-company-project"` または `"your-service-name"`
+- `region`: AWSリージョン（デフォルト: ap-northeast-1）
+
+変更例:
+```bash
+# bootstrap/dev/variables.tf を編集
+variable "project_prefix" {
+  description = "プロジェクト固有のプレフィックス（S3バケット名の一部として使用）"
+  type        = string
+  default     = "your-project-name"  # ← ここを変更
+}
+```
+
+**注意**: AWS S3バケット名はグローバルで一意である必要があります。プロジェクトプレフィックスを適切に設定し、他のAWSアカウントと重複しないようにしてください。
 
 #### 出力
 
@@ -167,6 +183,8 @@ terraform apply
 ### 2. バックエンド設定の更新
 
 ブートストラップで作成したS3バケットの情報を、各環境のbackend.tfファイルに設定します。
+
+**重要**: バケット名には必ずご自身のAWSアカウントIDとプロジェクトプレフィックスが含まれるようにしてください。ブートストラップの出力に表示されたバケット名を使用してください。
 
 ```
 # 例：environments/dev/backend.tf
