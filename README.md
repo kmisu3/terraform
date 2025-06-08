@@ -87,9 +87,9 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
 │   ├── Dockerfile         # Terraformを含むDockerイメージ定義
 │   └── terraform.sh       # Terraform実行スクリプト
 ├── bootstrap/             # Terraform状態管理用インフラの設定
-│   ├── main.tf            # S3バケットの定義
-│   ├── variables.tf       # 変数定義
-│   └── outputs.tf         # 出力定義
+│   ├── dev/               # 開発環境用の状態管理バケット設定
+│   ├── stg/               # ステージング環境用の状態管理バケット設定
+│   └── prod/              # 本番環境用の状態管理バケット設定
 ├── docker-compose.yml     # Docker Compose設定
 ├── Makefile               # タスク自動化スクリプト
 ├── environments/          # 環境別Terraform設定
@@ -117,25 +117,35 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
 
 まず、Terraformの状態管理に必要なインフラ（S3バケット）を作成します。bootstrapディレクトリには、各環境（開発、ステージング、本番）のTerraform状態を保存するためのS3バケットを作成するための設定が含まれています。
 
+各環境は独立したディレクトリに分かれており、必要な環境のみデプロイすることができます。
+
 ```bash
-# ブートストラップディレクトリに移動
-cd bootstrap
+# 開発環境のブートストラップを実行する場合
+cd bootstrap/dev
+terraform init
+terraform plan
+terraform apply
 
-# Terraformの初期化
-make tf-init ENV=dev
+# ステージング環境のブートストラップを実行する場合
+cd bootstrap/stg
+terraform init
+terraform plan
+terraform apply
 
-# 実行計画の確認
-make tf-plan ENV=dev
-
-# インフラストラクチャのデプロイ
-make tf-apply ENV=dev
+# 本番環境のブートストラップを実行する場合
+cd bootstrap/prod
+terraform init
+terraform plan
+terraform apply
 ```
 
-これにより、各環境（dev、stg、prod）のTerraform状態を保存するためのS3バケットが作成されます。
+**注意**: bootstrapディレクトリでは、Makefileで定義されたコマンド（make tf-init など）は使用せず、直接terraformコマンドを実行します。
+
+これにより、選択した環境のTerraform状態を保存するためのS3バケットが作成されます。
 
 #### 変数の設定
 
-以下の変数を設定することで、S3バケットの命名などをカスタマイズできます：
+各環境ディレクトリの`variables.tf`ファイルで以下の変数を設定することで、S3バケットの命名などをカスタマイズできます：
 
 - `project_prefix`: プロジェクト固有のプレフィックス（S3バケット名の一部として使用）
 - `region`: AWSリージョン
@@ -151,8 +161,8 @@ make tf-apply ENV=dev
 #### ブートストラップの注意事項
 
 - ブートストラップ設定は、ローカルの状態ファイルを使用します（remote stateは使用しません）
-- bootstrapディレクトリのTerraform設定は、他の環境の設定とは独立して管理します
-- インフラストラクチャが作成された後は、次のステップで各環境のバックエンド設定を更新してください
+- 各環境のTerraform設定は独立して管理します
+- インフラストラクチャが作成された後は、次のステップで対応する環境のバックエンド設定を更新してください
 
 ### 2. バックエンド設定の更新
 
