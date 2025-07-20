@@ -92,75 +92,36 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
 
 ## Terraform初期セットアップ
 
-### 1. ブートストラップの実行
+### 1. Settingの実行
 
-**重要**: ブートストラップを実行する前に、`setting/[環境]/main.tf`および`environments/[環境]/backend.tf`ファイル内のバケット名に含まれるAWSアカウントID（例: 123456000000）とプロジェクトプレフィックス（例: my-project）を、ご自身の環境に合わせて変更してください。これらの値はユニークである必要があります。
+**重要**: Settingを実行する前に、ファイル内のバケット名に含まれるAWSアカウントID（例: 123456000000）とプロジェクトプレフィックス（例: my-project）を、ご自身の環境に合わせて変更してください。これらの値はユニークである必要があります。
 
 まず、Terraformの状態管理に必要なインフラ（S3バケット）を作成します。settingディレクトリには、各環境（開発、ステージング、本番）のTerraform状態を保存するためのS3バケットを作成するための設定が含まれています。
 
 各環境は独立したディレクトリに分かれており、必要な環境のみデプロイすることができます。
 
 ```bash
-# 開発環境のブートストラップを実行する場合
+# 開発環境のSettingを実行する場合
 make setting-init ENV=dev
 make setting-plan ENV=dev
 make setting-apply ENV=dev
 
-# ステージング環境のブートストラップを実行する場合
+# ステージング環境のSettingを実行する場合
 make setting-init ENV=stg
 make setting-plan ENV=stg
 make setting-apply ENV=stg
 
-# 本番環境のブートストラップを実行する場合
+# 本番環境のSettingを実行する場合
 make setting-init ENV=prod
 make setting-plan ENV=prod
 make setting-apply ENV=prod
 ```
 
-**注意**: 上記のコマンドは、Docker環境でプロジェクトの`.aws/credentials`ファイルを使用して実行されます。これにより、ローカルのAWSクレデンシャルではなく、プロジェクト固有のクレデンシャルが使用されます。
-
-これにより、選択した環境のTerraform状態を保存するためのS3バケットが作成されます。
-
-#### 変数の設定
-
-**必須**: 各環境ディレクトリの`variables.tf`ファイルで以下の変数を設定してください：
-
-- `project_prefix`: プロジェクト固有のプレフィックス（S3バケット名の一部として使用）
-  - デフォルト値の `my-project` を必ずご自身のプロジェクト名に変更してください
-  - 例: `"your-company-project"` または `"your-service-name"`
-- `region`: AWSリージョン（デフォルト: ap-northeast-1）
-
-変更例:
-```bash
-# setting/dev/variables.tf を編集
-variable "project_prefix" {
-  description = "プロジェクト固有のプレフィックス（S3バケット名の一部として使用）"
-  type        = string
-  default     = "your-project-name"  # ← ここを変更
-}
-```
-
-**注意**: AWS S3バケット名はグローバルで一意である必要があります。プロジェクトプレフィックスを適切に設定し、他のAWSアカウントと重複しないようにしてください。
-
-#### 出力
-
-デプロイ後、以下の情報が出力されます：
-
-- 各環境のS3バケット名
-
-これらの値は、各環境のバックエンド設定で使用します。
-
-#### ブートストラップの注意事項
-
-- ブートストラップ設定は、ローカルの状態ファイルを使用します（remote stateは使用しません）
-- 各環境のTerraform設定は独立して管理します
-- インフラストラクチャが作成された後は、次のステップで対応する環境のバックエンド設定を更新してください
-
 ### 2. バックエンド設定の更新
 
-ブートストラップで作成したS3バケットの情報を、各環境のbackend.tfファイルに設定します。
+Settingで作成したS3バケットの情報を、各環境のbackend.tfファイルに設定します。
 
-**重要**: バケット名には必ずご自身のAWSアカウントIDとプロジェクトプレフィックスが含まれるようにしてください。ブートストラップの出力に表示されたバケット名を使用してください。
+**重要**: バケット名には必ずご自身のAWSアカウントIDとプロジェクトプレフィックスが含まれるようにしてください。Settingの出力に表示されたバケット名を使用してください。
 
 ```
 # 例：environments/dev/backend.tf
