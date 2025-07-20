@@ -11,7 +11,13 @@ fi
 ARGS=$@
 
 # settingsディレクトリに移動
-cd /work/settings/$ENV
+cd /work/settings
 
-# Terraformコマンドを実行
-terraform $ARGS 
+# .tfvarsファイルが存在するかチェック
+if [ ! -f "${ENV}.tfvars" ]; then
+  echo "環境ファイル ${ENV}.tfvars が見つかりません"
+  exit 1
+fi
+
+# Terraformコマンドを.tfvarsファイル付きで実行
+terraform $ARGS -var-file="${ENV}.tfvars" 

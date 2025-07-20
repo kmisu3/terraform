@@ -64,11 +64,17 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
 ├── .aws/                  # AWS認証情報ディレクトリ
 ├── .docker/               # Docker関連ファイル
 │   ├── Dockerfile         # Terraformを含むDockerイメージ定義
-│   └── terraform.sh       # Terraform実行スクリプト
-├── settings/             # Terraform状態管理用インフラの設定
-│   ├── dev/               # 開発環境用の状態管理バケット設定
-│   ├── stg/               # ステージング環境用の状態管理バケット設定
-│   └── prod/              # 本番環境用の状態管理バケット設定
+│   ├── terraform.sh       # Terraform実行スクリプト
+│   └── setting.sh         # Settings実行スクリプト
+├── settings/             # Terraform状態管理用インフラの設定（最適化済み）
+│   ├── main.tf            # 共通のリソース定義
+│   ├── variables.tf       # 変数定義
+│   ├── outputs.tf         # 出力定義
+│   ├── dev.tfvars         # 開発環境用変数
+│   ├── stg.tfvars         # ステージング環境用変数
+│   ├── prod.tfvars        # 本番環境用変数
+│   └── modules/           # 再利用可能なモジュール
+│       └── terraform-state-bucket/
 ├── docker-compose.yml     # Docker Compose設定
 ├── Makefile               # タスク自動化スクリプト
 ├── environments/          # 環境別Terraform設定
@@ -94,11 +100,11 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
 
 ### 1. Settingsの実行
 
-**重要**: Settingsを実行する前に、ファイル内のバケット名に含まれるAWSアカウントID（例: 123456000000）とプロジェクトプレフィックス（例: my-project）を、ご自身の環境に合わせて変更してください。これらの値はユニークである必要があります。
+**重要**: Settingsを実行する前に、`settings/variables.tf`ファイル内のプロジェクトプレフィックス（デフォルト: my-project）を、ご自身の環境に合わせて変更してください。この値はユニークである必要があります。
 
-まず、Terraformの状態管理に必要なインフラ（S3バケット）を作成します。settingsディレクトリには、各環境（開発、ステージング、本番）のTerraform状態を保存するためのS3バケットを作成するための設定が含まれています。
+まず、Terraformの状態管理に必要なインフラ（S3バケット）を作成します。settingsディレクトリには、各環境（開発、ステージング、本番）のTerraform状態を保存するためのS3バケットを作成するための共通設定が含まれています。
 
-各環境は独立したディレクトリに分かれており、必要な環境のみデプロイすることができます。
+環境別の設定は`.tfvars`ファイルで管理されており、必要な環境のみデプロイすることができます。
 
 ```bash
 # 開発環境のSettingsを実行する場合
@@ -121,13 +127,13 @@ make settings-apply ENV=prod
 
 Settingsで作成したS3バケットの情報を、各環境のbackend.tfファイルに設定します。
 
-**重要**: バケット名には必ずご自身のAWSアカウントIDとプロジェクトプレフィックスが含まれるようにしてください。Settingsの出力に表示されたバケット名を使用してください。
+**重要**: バケット名には必ずご自身のAWSアカウントIDとプロジェクトプレフィックスが含まれるようにしてください。Settingsの実行時に`terraform_state_bucket`として出力されたバケット名を使用してください。
 
 ```
 # 例：environments/dev/backend.tf
 terraform {
   backend "s3" {
-    bucket         = "<出力されたバケット名>"  # settings実行後に出力された値に更新
+    bucket         = "<出力されたバケット名>"  # settings実行後に出力された terraform_state_bucket の値に更新
     key            = "terraform.tfstate"
     region         = "ap-northeast-1"
     encrypt        = true

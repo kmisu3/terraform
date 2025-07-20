@@ -32,19 +32,19 @@ tf-destroy:
 # Settings用のコマンド
 # Settings初期化
 settings-init:
-	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/settings.sh init
+	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/setting.sh init
 
 # Settingsプラン
 settings-plan:
-	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/settings.sh plan
+	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/setting.sh plan
 
 # Settingsリソース適用
 settings-apply:
-	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/settings.sh apply
+	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/setting.sh apply
 
 # Settingsリソース削除
 settings-destroy:
-	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/settings.sh destroy
+	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/setting.sh destroy
 
 # 使用方法表示
 help:
