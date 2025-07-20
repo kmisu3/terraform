@@ -12,27 +12,6 @@
 
 ## 使用方法
 
-### 基本コマンド
-
-```bash
-# ヘルプを表示
-make help
-
-# Dockerコンテナでシェルを起動
-make shell
-
-# 開発環境でTerraform初期化
-make tf-init ENV=dev
-
-# ステージング環境でプラン確認
-make tf-plan ENV=stg
-
-# 本番環境でリソース適用
-make tf-apply ENV=prod
-
-# 開発環境でリソース削除
-make tf-destroy ENV=dev
-```
 
 ### 環境変数
 
@@ -123,25 +102,22 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
 
 ```bash
 # 開発環境のブートストラップを実行する場合
-cd bootstrap/dev
-terraform init
-terraform plan
-terraform apply
+make bootstrap-init ENV=dev
+make bootstrap-plan ENV=dev
+make bootstrap-apply ENV=dev
 
 # ステージング環境のブートストラップを実行する場合
-cd bootstrap/stg
-terraform init
-terraform plan
-terraform apply
+make bootstrap-init ENV=stg
+make bootstrap-plan ENV=stg
+make bootstrap-apply ENV=stg
 
 # 本番環境のブートストラップを実行する場合
-cd bootstrap/prod
-terraform init
-terraform plan
-terraform apply
+make bootstrap-init ENV=prod
+make bootstrap-plan ENV=prod
+make bootstrap-apply ENV=prod
 ```
 
-**注意**: bootstrapディレクトリでは、Makefileで定義されたコマンド（make tf-init など）は使用せず、直接terraformコマンドを実行します。
+**注意**: 上記のコマンドは、Docker環境でプロジェクトの`.aws/credentials`ファイルを使用して実行されます。これにより、ローカルのAWSクレデンシャルではなく、プロジェクト固有のクレデンシャルが使用されます。
 
 これにより、選択した環境のTerraform状態を保存するためのS3バケットが作成されます。
 
@@ -227,3 +203,10 @@ make tf-destroy ENV=stg
 # 本番環境のリソースを削除
 make tf-destroy ENV=prod
 ```
+
+### 環境変数
+
+* `ENV` - 環境名 (dev/stg/prod、デフォルト: dev)
+* `AWS_PROFILE` - AWSプロファイル名 (デフォルト: ENVと同名のプロファイル)
+
+例

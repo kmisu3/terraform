@@ -9,7 +9,7 @@ services:
       - .:/work
       - ./.aws:/root/.aws
     environment:
-      - AWS_PROFILE=${AWS_PROFILE:-${ENV:-default}}
-      - ENV=${ENV:-dev}
+      - AWS_PROFILE=${AWS_PROFILE}
+      - ENV=${ENV}
     working_dir: /work
     entrypoint: /bin/bash 
