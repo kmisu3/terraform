@@ -65,7 +65,7 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
 ├── .docker/               # Docker関連ファイル
 │   ├── Dockerfile         # Terraformを含むDockerイメージ定義
 │   └── terraform.sh       # Terraform実行スクリプト
-├── setting/             # Terraform状態管理用インフラの設定
+├── settings/             # Terraform状態管理用インフラの設定
 │   ├── dev/               # 開発環境用の状態管理バケット設定
 │   ├── stg/               # ステージング環境用の状態管理バケット設定
 │   └── prod/              # 本番環境用の状態管理バケット設定
@@ -92,42 +92,42 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
 
 ## Terraform初期セットアップ
 
-### 1. Settingの実行
+### 1. Settingsの実行
 
-**重要**: Settingを実行する前に、ファイル内のバケット名に含まれるAWSアカウントID（例: 123456000000）とプロジェクトプレフィックス（例: my-project）を、ご自身の環境に合わせて変更してください。これらの値はユニークである必要があります。
+**重要**: Settingsを実行する前に、ファイル内のバケット名に含まれるAWSアカウントID（例: 123456000000）とプロジェクトプレフィックス（例: my-project）を、ご自身の環境に合わせて変更してください。これらの値はユニークである必要があります。
 
-まず、Terraformの状態管理に必要なインフラ（S3バケット）を作成します。settingディレクトリには、各環境（開発、ステージング、本番）のTerraform状態を保存するためのS3バケットを作成するための設定が含まれています。
+まず、Terraformの状態管理に必要なインフラ（S3バケット）を作成します。settingsディレクトリには、各環境（開発、ステージング、本番）のTerraform状態を保存するためのS3バケットを作成するための設定が含まれています。
 
 各環境は独立したディレクトリに分かれており、必要な環境のみデプロイすることができます。
 
 ```bash
-# 開発環境のSettingを実行する場合
-make setting-init ENV=dev
-make setting-plan ENV=dev
-make setting-apply ENV=dev
+# 開発環境のSettingsを実行する場合
+make settings-init ENV=dev
+make settings-plan ENV=dev
+make settings-apply ENV=dev
 
-# ステージング環境のSettingを実行する場合
-make setting-init ENV=stg
-make setting-plan ENV=stg
-make setting-apply ENV=stg
+# ステージング環境のSettingsを実行する場合
+make settings-init ENV=stg
+make settings-plan ENV=stg
+make settings-apply ENV=stg
 
-# 本番環境のSettingを実行する場合
-make setting-init ENV=prod
-make setting-plan ENV=prod
-make setting-apply ENV=prod
+# 本番環境のSettingsを実行する場合
+make settings-init ENV=prod
+make settings-plan ENV=prod
+make settings-apply ENV=prod
 ```
 
 ### 2. バックエンド設定の更新
 
-Settingで作成したS3バケットの情報を、各環境のbackend.tfファイルに設定します。
+Settingsで作成したS3バケットの情報を、各環境のbackend.tfファイルに設定します。
 
-**重要**: バケット名には必ずご自身のAWSアカウントIDとプロジェクトプレフィックスが含まれるようにしてください。Settingの出力に表示されたバケット名を使用してください。
+**重要**: バケット名には必ずご自身のAWSアカウントIDとプロジェクトプレフィックスが含まれるようにしてください。Settingsの出力に表示されたバケット名を使用してください。
 
 ```
 # 例：environments/dev/backend.tf
 terraform {
   backend "s3" {
-    bucket         = "<出力されたバケット名>"  # setting実行後に出力された値に更新
+    bucket         = "<出力されたバケット名>"  # settings実行後に出力された値に更新
     key            = "terraform.tfstate"
     region         = "ap-northeast-1"
     encrypt        = true

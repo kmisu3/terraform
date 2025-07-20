@@ -1,4 +1,4 @@
-.PHONY: build up shell tf-init tf-plan tf-apply tf-destroy setting-init setting-plan setting-apply setting-destroy
+.PHONY: build up shell tf-init tf-plan tf-apply tf-destroy settings-init settings-plan settings-apply settings-destroy
 
 # デフォルト環境
 ENV ?= dev
@@ -29,22 +29,22 @@ tf-apply:
 tf-destroy:
 	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/terraform.sh destroy
 
-# Setting用のコマンド
-# Setting初期化
-setting-init:
-	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/setting.sh init
+# Settings用のコマンド
+# Settings初期化
+settings-init:
+	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/settings.sh init
 
-# Settingプラン
-setting-plan:
-	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/setting.sh plan
+# Settingsプラン
+settings-plan:
+	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/settings.sh plan
 
-# Settingリソース適用
-setting-apply:
-	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/setting.sh apply
+# Settingsリソース適用
+settings-apply:
+	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/settings.sh apply
 
-# Settingリソース削除
-setting-destroy:
-	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/setting.sh destroy
+# Settingsリソース削除
+settings-destroy:
+	ENV=$(ENV) AWS_PROFILE=$(AWS_PROFILE) docker-compose run --rm terraform .docker/settings.sh destroy
 
 # 使用方法表示
 help:
@@ -52,11 +52,11 @@ help:
 	@echo "  make build              - Dockerイメージをビルド"
 	@echo "  make shell              - コンテナを起動してシェルに入る"
 	@echo ""
-	@echo "Setting用コマンド:"
-	@echo "  make setting-init ENV=dev    - Setting初期化 (dev環境)"
-	@echo "  make setting-plan ENV=stg    - Settingプラン (stg環境)"
-	@echo "  make setting-apply ENV=prod  - Settingリソース適用 (prod環境)"
-	@echo "  make setting-destroy ENV=dev - Settingリソース削除 (dev環境)"
+	@echo "Settings用コマンド:"
+	@echo "  make settings-init ENV=dev    - Settings初期化 (dev環境)"
+	@echo "  make settings-plan ENV=stg    - Settingsプラン (stg環境)"
+	@echo "  make settings-apply ENV=prod  - Settingsリソース適用 (prod環境)"
+	@echo "  make settings-destroy ENV=dev - Settingsリソース削除 (dev環境)"
 	@echo ""
 	@echo "環境用コマンド:"
 	@echo "  make tf-init ENV=dev    - Terraform初期化 (dev環境)"

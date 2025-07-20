@@ -1,4 +1,4 @@
-# terraform_state_bucket_nameはsettingで作成・管理されているため削除
+# terraform_state_bucket_nameはsettingsで作成・管理されているため削除
 
 # output "alb_dns_name" {
 #   description = "作成されたALBのDNS名"

@@ -10,8 +10,8 @@ fi
 # 引数を取得
 ARGS=$@
 
-# settingディレクトリに移動
-cd /work/setting/$ENV
+# settingsディレクトリに移動
+cd /work/settings/$ENV
 
 # Terraformコマンドを実行
 terraform $ARGS 
