@@ -6,10 +6,10 @@ data "aws_caller_identity" "current" {}
 
 # 開発環境のステート管理用S3バケット
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${local.project_prefix}-terraform-state-dev-${local.account_id}"
+  bucket = "${local.project_prefix}-terraform-state-${local.environment}-${local.account_id}"
 
   tags = {
-    Environment = "dev"
+    Environment = local.environment
     Project     = local.project_prefix
     ManagedBy   = "Terraform"
   }
