@@ -4,17 +4,13 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
-locals {
-  account_id = data.aws_caller_identity.current.account_id
-}
-
 # ステージング環境のステート管理用S3バケット
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${var.project_prefix}-terraform-state-stg-${local.account_id}"
+  bucket = "${local.project_prefix}-terraform-state-stg-${local.account_id}"
 
   tags = {
     Environment = "stg"
-    Project     = var.project_prefix
+    Project     = local.project_prefix
     ManagedBy   = "Terraform"
   }
 }

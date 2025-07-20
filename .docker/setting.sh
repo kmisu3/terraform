@@ -10,8 +10,8 @@ fi
 # 引数を取得
 ARGS=$@
 
-# bootstrapディレクトリに移動
-cd /work/bootstrap/$ENV
+# settingディレクトリに移動
+cd /work/setting/$ENV
 
 # Terraformコマンドを実行
 terraform $ARGS 

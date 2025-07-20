@@ -65,7 +65,7 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
 ├── .docker/               # Docker関連ファイル
 │   ├── Dockerfile         # Terraformを含むDockerイメージ定義
 │   └── terraform.sh       # Terraform実行スクリプト
-├── bootstrap/             # Terraform状態管理用インフラの設定
+├── setting/             # Terraform状態管理用インフラの設定
 │   ├── dev/               # 開発環境用の状態管理バケット設定
 │   ├── stg/               # ステージング環境用の状態管理バケット設定
 │   └── prod/              # 本番環境用の状態管理バケット設定
@@ -94,27 +94,27 @@ make tf-apply ENV=prod AWS_PROFILE=prod-admin
 
 ### 1. ブートストラップの実行
 
-**重要**: ブートストラップを実行する前に、`bootstrap/[環境]/main.tf`および`environments/[環境]/backend.tf`ファイル内のバケット名に含まれるAWSアカウントID（例: 123456000000）とプロジェクトプレフィックス（例: my-project）を、ご自身の環境に合わせて変更してください。これらの値はユニークである必要があります。
+**重要**: ブートストラップを実行する前に、`setting/[環境]/main.tf`および`environments/[環境]/backend.tf`ファイル内のバケット名に含まれるAWSアカウントID（例: 123456000000）とプロジェクトプレフィックス（例: my-project）を、ご自身の環境に合わせて変更してください。これらの値はユニークである必要があります。
 
-まず、Terraformの状態管理に必要なインフラ（S3バケット）を作成します。bootstrapディレクトリには、各環境（開発、ステージング、本番）のTerraform状態を保存するためのS3バケットを作成するための設定が含まれています。
+まず、Terraformの状態管理に必要なインフラ（S3バケット）を作成します。settingディレクトリには、各環境（開発、ステージング、本番）のTerraform状態を保存するためのS3バケットを作成するための設定が含まれています。
 
 各環境は独立したディレクトリに分かれており、必要な環境のみデプロイすることができます。
 
 ```bash
 # 開発環境のブートストラップを実行する場合
-make bootstrap-init ENV=dev
-make bootstrap-plan ENV=dev
-make bootstrap-apply ENV=dev
+make setting-init ENV=dev
+make setting-plan ENV=dev
+make setting-apply ENV=dev
 
 # ステージング環境のブートストラップを実行する場合
-make bootstrap-init ENV=stg
-make bootstrap-plan ENV=stg
-make bootstrap-apply ENV=stg
+make setting-init ENV=stg
+make setting-plan ENV=stg
+make setting-apply ENV=stg
 
 # 本番環境のブートストラップを実行する場合
-make bootstrap-init ENV=prod
-make bootstrap-plan ENV=prod
-make bootstrap-apply ENV=prod
+make setting-init ENV=prod
+make setting-plan ENV=prod
+make setting-apply ENV=prod
 ```
 
 **注意**: 上記のコマンドは、Docker環境でプロジェクトの`.aws/credentials`ファイルを使用して実行されます。これにより、ローカルのAWSクレデンシャルではなく、プロジェクト固有のクレデンシャルが使用されます。
@@ -132,7 +132,7 @@ make bootstrap-apply ENV=prod
 
 変更例:
 ```bash
-# bootstrap/dev/variables.tf を編集
+# setting/dev/variables.tf を編集
 variable "project_prefix" {
   description = "プロジェクト固有のプレフィックス（S3バケット名の一部として使用）"
   type        = string
@@ -166,7 +166,7 @@ variable "project_prefix" {
 # 例：environments/dev/backend.tf
 terraform {
   backend "s3" {
-    bucket         = "<出力されたバケット名>"  # bootstrap実行後に出力された値に更新
+    bucket         = "<出力されたバケット名>"  # setting実行後に出力された値に更新
     key            = "terraform.tfstate"
     region         = "ap-northeast-1"
     encrypt        = true

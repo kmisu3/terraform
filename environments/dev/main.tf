@@ -1,4 +1,4 @@
-# S3バケットとDynamoDBは、bootstrapディレクトリで作成済み
+# S3バケットとDynamoDBは、settingディレクトリで作成済み
 
 # 他のモジュールの呼び出し例
 # module "api_gateway" {
