@@ -10,14 +10,17 @@ fi
 # 引数を取得
 ARGS=$@
 
-# settingsディレクトリに移動
-cd /work/settings
+# settings/{ENV}ディレクトリに移動
+TARGET_DIR="/work/settings/${ENV}"
 
-# .tfvarsファイルが存在するかチェック
-if [ ! -f "${ENV}.tfvars" ]; then
-  echo "環境ファイル ${ENV}.tfvars が見つかりません"
+# ディレクトリが存在するかチェック
+if [ ! -d "${TARGET_DIR}" ]; then
+  echo "環境ディレクトリ ${TARGET_DIR} が見つかりません"
+  echo "利用可能な環境: dev, stg, prod"
   exit 1
 fi
 
-# Terraformコマンドを.tfvarsファイル付きで実行
-terraform $ARGS -var-file="${ENV}.tfvars" 
+cd "${TARGET_DIR}"
+
+# Terraformコマンドを実行
+terraform $ARGS 

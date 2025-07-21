@@ -1,10 +1,8 @@
-variable "region" {
-  description = "AWSリージョン"
+variable "name_prefix" {
+  description = "リソース名のプレフィックス"
   type        = string
-  default     = "ap-northeast-1"
 }
 
-# VPC設定
 variable "vpc_cidr" {
   description = "VPCのCIDRブロック"
   type        = string
@@ -14,13 +12,25 @@ variable "vpc_cidr" {
 variable "public_subnet_cidrs" {
   description = "パブリックサブネットのCIDRブロックのリスト"
   type        = list(string)
-  default     = ["10.0.1.0/24", "10.0.2.0/24"]
+  default     = []
 }
 
 variable "private_subnet_cidrs" {
   description = "プライベートサブネットのCIDRブロックのリスト"
   type        = list(string)
-  default     = ["10.0.10.0/24", "10.0.20.0/24"]
+  default     = []
+}
+
+variable "enable_dns_support" {
+  description = "VPCでDNSサポートを有効にするかどうか"
+  type        = bool
+  default     = true
+}
+
+variable "enable_dns_hostnames" {
+  description = "VPCでDNSホスト名を有効にするかどうか"
+  type        = bool
+  default     = true
 }
 
 variable "create_internet_gateway" {
@@ -32,5 +42,11 @@ variable "create_internet_gateway" {
 variable "create_nat_gateway" {
   description = "NAT Gatewayを作成するかどうか"
   type        = bool
-  default     = true
+  default     = false
+}
+
+variable "tags" {
+  description = "リソースに適用するタグ"
+  type        = map(string)
+  default     = {}
 } 

@@ -1,27 +1,39 @@
-# S3バケットとDynamoDBは、settingsディレクトリで作成済み
+# VPCモジュールの使用例
+module "vpc" {
+  source = "../../modules/vpc"
 
-# 他のモジュールの呼び出し例
-# module "api_gateway" {
-#   source = "../../modules/api-gateway"
+  name_prefix = local.project_prefix
+  vpc_cidr    = var.vpc_cidr
+  
+  public_subnet_cidrs  = var.public_subnet_cidrs
+  private_subnet_cidrs = var.private_subnet_cidrs
+  
+  create_internet_gateway = var.create_internet_gateway
+  create_nat_gateway      = var.create_nat_gateway
+
+  tags = local.tags
+}
+
+# 追加のリソースはここに定義してください
+# 例: EC2インスタンス、RDS、ALB等
+
+# 他のモジュールの呼び出し例（コメントアウト）
+# module "rds" {
+#   source = "../../modules/rds"
 #   
-#   # モジュールに渡すパラメータ
-#   name        = "${local.project_prefix}-api-${local.environment}"
-#   environment = local.environment
-#   tags        = local.tags
-# }
-# 
-# module "waf" {
-#   source = "../../modules/waf"
-#   
-#   name        = "${local.project_prefix}-waf-${local.environment}"
-#   environment = local.environment
-#   tags        = local.tags
+#   name_prefix         = local.project_prefix
+#   environment         = local.environment
+#   vpc_id              = module.vpc.vpc_id
+#   private_subnet_ids  = module.vpc.private_subnet_ids
+#   tags                = local.tags
 # }
 # 
 # module "alb" {
 #   source = "../../modules/alb"
 #   
-#   name        = "${local.project_prefix}-alb-${local.environment}"
-#   environment = local.environment
-#   tags        = local.tags
+#   name_prefix        = local.project_prefix
+#   environment        = local.environment
+#   vpc_id             = module.vpc.vpc_id
+#   public_subnet_ids  = module.vpc.public_subnet_ids
+#   tags               = local.tags
 # } 
