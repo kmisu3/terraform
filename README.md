@@ -39,21 +39,6 @@
 * `ENV` - 環境名 (dev/stg/prod、デフォルト: dev)
 * `AWS_PROFILE` - AWSプロファイル名 (デフォルト: ENVと同名のプロファイル)
 
-### 新しく追加されたコマンド
-
-```bash
-# Terraformコードのフォーマット
-make fmt
-
-# Terraform設定の検証
-make validate
-
-# モジュールの検証
-make module-validate
-
-# 詳細なヘルプ表示
-make help
-```
 
 ### 推奨ワークフロー
 
