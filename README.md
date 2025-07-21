@@ -8,9 +8,9 @@
 .
 ├── .aws/                  # AWS認証情報ディレクトリ
 ├── .docker/               # Docker関連ファイル
-├── modules/               # 再利用可能なモジュール（NEW!）
+├── modules/               # 再利用可能なモジュール
 │   └── vpc/               # VPCモジュール
-├── settings/              # Terraform状態管理用インフラの設定（最適化済み！）
+├── settings/              # Terraform状態管理用インフラの設定
 │   ├── dev/               # 開発環境用settings
 │   ├── stg/               # ステージング環境用settings
 │   ├── prod/              # 本番環境用settings
@@ -153,17 +153,6 @@ make tf-apply ENV=dev
   cp -r settings/dev settings/uat          # settings側も追加
   ```
 
-## 🎯 主な改善点
-
-このプロジェクトでは以下のベストプラクティスを実装しています：
-
-1. **モジュール化**: 再利用可能なVPCモジュールを作成
-2. **環境分離**: 独立したCIDRブロックと状態ファイル
-3. **バージョン管理**: 明示的なTerraformとプロバイダーバージョン指定
-4. **命名規則**: 一貫性のあるリソース命名
-5. **ドキュメント化**: 各モジュールに詳細なREADMEを提供
-6. **Settings最適化**: 環境別ディレクトリ構造でDRY原則を実現
-
 ## リソースの削除
 
 ```bash
@@ -172,17 +161,4 @@ make tf-destroy ENV=dev
 
 # Settings（状態管理インフラ）の削除
 make settings-destroy ENV=dev
-```
-
-## 🆘 ヘルプとトラブルシューティング
-
-```bash
-# 使用方法の確認
-make help
-
-# Terraformコードの検証
-make validate
-
-# モジュールの検証
-make module-validate
 ```
